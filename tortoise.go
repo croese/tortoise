@@ -1,6 +1,8 @@
 package tortoise
 
-import "math"
+import (
+	"math"
+)
 
 type Point2D struct {
 	X, Y float64
@@ -36,9 +38,33 @@ func (t *Turtle) Position() Point2D {
 }
 
 func radiansToDegrees(rad float64) float64 {
-	return rad * math.Pi / 180.0
+	return rad * 180.0 / math.Pi
 }
 
 func (t *Turtle) Degrees() float64 {
 	return radiansToDegrees(t.state.angleInRadians)
+}
+
+func (t *Turtle) Left(degrees float64) *Turtle {
+	targetAngle := degrees * math.Pi / 180
+
+	t.state.angleInRadians += targetAngle
+	return t
+}
+
+func (t *Turtle) Right(degrees float64) *Turtle {
+	return t.Left(-degrees)
+}
+
+func (t *Turtle) Forward(distance float64) *Turtle {
+	dx := math.Cos(t.state.angleInRadians)
+	dy := math.Sin(t.state.angleInRadians)
+
+	t.state.x += distance * dx
+	t.state.y += distance * dy
+	return t
+}
+
+func (t *Turtle) Back(distance float64) *Turtle {
+	return t.Forward(-distance)
 }
